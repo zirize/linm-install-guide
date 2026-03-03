@@ -73,9 +73,9 @@ make install
    /home/<사용자명>/.local/bin/linm $@
    ```
 
-예: 사용자명이 `bill`이면 아래와 같습니다.
+예: 사용자명이 `zirize`이면 아래와 같습니다.
 ```bash
-/home/bill/.local/bin/linm $@
+/home/zirize/.local/bin/linm $@
 ```
 
 ---
