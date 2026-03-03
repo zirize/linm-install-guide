@@ -85,11 +85,11 @@ make install
 
 ## 4. Alias 등록 (종료 시 디렉토리 유지)
 
-`linm` 종료 시 해당 위치를 유지하려면 쉘 설정 파일(`~/.bashrc` 또는 `~/.zshrc`)에 아래 alias를 등록하십시오.
+`linm` 종료 시 해당 위치를 유지하려면 Bash에서는 `~/.bash_aliases`에 alias를 등록하는 방식을 권장합니다.
 
-1.  **쉘 설정 파일 열기**:
+1.  **Alias 파일 열기 (없으면 생성됨)**:
     ```bash
-    nano ~/.bashrc  # 또는 nano ~/.zshrc
+    nano ~/.bash_aliases
     ```
 
 2.  **아래 내용 추가**:
@@ -101,7 +101,16 @@ make install
 
 3.  **설정 적용**:
     ```bash
+    source ~/.bash_aliases
     source ~/.bashrc
+    ```
+
+4.  **(`~/.bash_aliases` 자동 로드 확인)**:
+    일반적으로 `~/.bashrc`에서 `~/.bash_aliases`를 자동으로 불러옵니다. 동작하지 않으면 `~/.bashrc`에 아래 블록이 있는지 확인하세요.
+    ```bash
+    if [ -f ~/.bash_aliases ]; then
+        . ~/.bash_aliases
+    fi
     ```
 
 이제 터미널에서 `linm` 명령어로 실행하면, 종료 시에도 마지막 작업 디렉토리가 유지됩니다.
