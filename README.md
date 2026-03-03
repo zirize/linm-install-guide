@@ -66,7 +66,9 @@ make install
    ```bash
    nano $HOME/.local/bin/linm.sh
    ```
-2. `@bindir@/linm $@`를 실제 경로로 변경:
+2. 실행 라인을 확인해 실제 경로로 변경:
+    - 설치 상태에 따라 `@bindir@/linm $@` 또는 `OFF/linm $@` 형태일 수 있습니다.
+    - 두 경우 모두 플레이스홀더이므로, 실제 바이너리 경로로 바꿔야 합니다.
    ```bash
    /home/<사용자명>/.local/bin/linm $@
    ```
