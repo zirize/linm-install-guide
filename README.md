@@ -1,14 +1,17 @@
-# Installation Guide for LinM
+# LinM 한글 설치 가이드
 
-LinM은 리눅스용 비주얼 파일 관리자(Mdir 클론)입니다. 이 문서는 주요 배포판별 설치 방법과 환경 설정 가이드를 제공합니다.
+LinM은 Linux용 텍스트 UI 파일 관리자(Mdir 클론)입니다. 이 문서는 사용자 홈 경로(`$HOME/.local`)에 안전하게 설치하는 방법을 안내합니다.
+
+- 오리지널 프로젝트: https://github.com/la9527/linm
+- 이 저장소: LinM 설치 가이드 문서 전용
 
 ---
 
-## 1. 배포판별 의존성 설치
+## 1) 사전 준비 (의존성 설치)
 
-빌드에 필요한 도구와 라이브러리를 먼저 설치해야 합니다. (이 단계는 시스템 관리자 권한이 필요할 수 있습니다.)
+빌드에 필요한 도구와 라이브러리를 먼저 설치합니다. (관리자 권한 필요)
 
-### **A. Debian / Ubuntu 계열**
+### Debian / Ubuntu
 ```bash
 sudo apt-get update
 sudo apt-get install -y build-essential cmake git gettext \
@@ -16,13 +19,13 @@ sudo apt-get install -y build-essential cmake git gettext \
     libsource-highlight-dev
 ```
 
-### **B. Arch Linux**
+### Arch Linux
 ```bash
 sudo pacman -S --needed base-devel cmake git gettext \
     ncurses openssl libssh2 source-highlight
 ```
 
-### **C. Red Hat / Fedora / CentOS 계열**
+### Fedora / RHEL / CentOS
 ```bash
 # Fedora
 sudo dnf install -y gcc-c++ cmake git make gettext \
@@ -37,80 +40,76 @@ sudo yum install -y gcc-c++ cmake3 git make gettext \
 
 ---
 
-## 2. 소스 클론 및 빌드 (Root 권한 없이 설치)
+## 2) 소스 클론 및 사용자 경로 설치
 
-사용자 계정의 홈 디렉토리 내에 설치하여 시스템 전역에 영향을 주지 않고 활용할 수 있습니다.
+아래 방식은 `sudo` 없이 사용자 경로에 설치하므로 시스템 전역 환경에 영향을 주지 않습니다.
 
-### **A. 소스 코드 가져오기**
 ```bash
-# GitHub에서 프로젝트 복제
 git clone https://github.com/la9527/linm.git
 cd linm
-```
 
-### **B. 빌드 및 사용자 레벨 설치**
-`-DCMAKE_INSTALL_PREFIX`를 `$HOME/.local`로 설정하면 `sudo` 없이 설치가 가능합니다.
-```bash
-# 빌드 디렉토리 생성
-mkdir build
+mkdir -p build
 cd build
 
-# 사용자 계정 내 설치 경로 설정
 cmake -DCMAKE_INSTALL_PREFIX=$HOME/.local ..
 make
-
-# 설치 (sudo 불필요)
 make install
 ```
 
 ---
 
-## 3. 실행 스크립트(linm.sh) 및 바이너리 경로 수정
+## 3) `linm.sh` 경로 보정
 
-`linm`을 종료한 후에도 작업하던 디렉토리를 유지하려면 실제 바이너리가 아닌 `linm.sh` 스크립트를 통해 실행해야 합니다.
+작업 디렉토리 유지 기능을 사용하려면 바이너리(`linm`)가 아닌 스크립트(`linm.sh`)를 통해 실행해야 합니다.
 
-1.  **스크립트 위치 확인**: `$HOME/.local/bin/linm.sh`에 위치합니다.
-2.  **바이너리 경로 수정**:
-    에디터로 해당 파일을 열고 `@bindir@` 부분을 실제 바이너리가 설치된 경로인 `$HOME/.local/bin`으로 수정합니다. (직접 전체 경로를 입력해 주세요.)
+1. 파일 열기:
+   ```bash
+   nano $HOME/.local/bin/linm.sh
+   ```
+2. `@bindir@/linm $@`를 실제 경로로 변경:
+   ```bash
+   /home/<사용자명>/.local/bin/linm $@
+   ```
 
+예: 사용자명이 `bill`이면 아래와 같습니다.
 ```bash
-# 수정 전 (예시)
-@bindir@/linm $@
-
-# 수정 후 (예: 사용자가 'bill'인 경우)
 /home/bill/.local/bin/linm $@
 ```
 
 ---
 
-## 4. Alias 등록 (종료 시 디렉토리 유지)
+## 4) Bash alias 등록 (`.bash_aliases` 권장)
 
-`linm` 종료 시 해당 위치를 유지하려면 Bash에서는 `~/.bash_aliases`에 alias를 등록하는 방식을 권장합니다.
+Bash에서는 `~/.bashrc` 직접 수정 대신 `~/.bash_aliases`에 alias를 두는 방식을 권장합니다.
 
-1.  **Alias 파일 열기 (없으면 생성됨)**:
-    ```bash
-    nano ~/.bash_aliases
-    ```
+1. 파일 열기(없으면 생성):
+   ```bash
+   nano ~/.bash_aliases
+   ```
+2. 아래 alias 추가:
+   ```bash
+   alias linm='. $HOME/.local/bin/linm.sh'
+   ```
+   점(`.`)과 공백이 반드시 있어야 현재 셸 세션에 디렉토리 변경이 반영됩니다.
+3. 적용:
+   ```bash
+   source ~/.bash_aliases
+   source ~/.bashrc
+   ```
 
-2.  **아래 내용 추가**:
-    반드시 앞에 점(`.`)과 공백이 있어야 현재 쉘 세션에 디렉토리 변경이 반영됩니다.
-    ```bash
-    # 사용자 로컬 설치 기준
-    alias linm='. $HOME/.local/bin/linm.sh'
-    ```
+`~/.bash_aliases`가 자동 로드되지 않으면 `~/.bashrc`에 아래가 있는지 확인하세요.
+```bash
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+```
 
-3.  **설정 적용**:
-    ```bash
-    source ~/.bash_aliases
-    source ~/.bashrc
-    ```
+---
 
-4.  **(`~/.bash_aliases` 자동 로드 확인)**:
-    일반적으로 `~/.bashrc`에서 `~/.bash_aliases`를 자동으로 불러옵니다. 동작하지 않으면 `~/.bashrc`에 아래 블록이 있는지 확인하세요.
-    ```bash
-    if [ -f ~/.bash_aliases ]; then
-        . ~/.bash_aliases
-    fi
-    ```
+## 5) 동작 확인
 
-이제 터미널에서 `linm` 명령어로 실행하면, 종료 시에도 마지막 작업 디렉토리가 유지됩니다.
+```bash
+linm
+```
+
+실행 후 다른 디렉토리로 이동해서 종료했을 때, 터미널 현재 경로가 마지막 작업 위치로 유지되면 정상입니다.
