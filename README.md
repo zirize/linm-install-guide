@@ -3,6 +3,7 @@
 LinM은 Linux용 텍스트 UI 파일 관리자(Mdir 클론)입니다. 이 문서는 사용자 홈 경로(`$HOME/.local`)에 안전하게 설치하는 방법을 안내합니다.
 
 - 오리지널 프로젝트: https://github.com/la9527/linm
+- fork (최신 패치 포함): https://github.com/zirize/linm
 - 이 저장소: LinM 설치 가이드 문서 전용
 
 ---
@@ -44,8 +45,16 @@ sudo yum install -y gcc-c++ cmake3 git make gettext \
 
 아래 방식은 `sudo` 없이 사용자 경로에 설치하므로 시스템 전역 환경에 영향을 주지 않습니다.
 
+> 최신 패치(v0.9.3)가 포함된 fork를 클론하려면 아래 URL을 사용하세요:
+> ```bash
+> git clone https://github.com/zirize/linm.git
+> ```
+> 오리지널 저장소를 사용하려면:
+> ```bash
+> git clone https://github.com/la9527/linm.git
+> ```
+
 ```bash
-git clone https://github.com/la9527/linm.git
 cd linm
 
 mkdir -p build
@@ -54,6 +63,12 @@ cd build
 cmake -DCMAKE_INSTALL_PREFIX=$HOME/.local ..
 make
 make install
+```
+
+설치 후 `$HOME/.local/bin`이 `PATH`에 없다면 `~/.bashrc`에 추가합니다:
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+source ~/.bashrc
 ```
 
 ---
@@ -92,7 +107,7 @@ Bash에서는 `~/.bashrc` 직접 수정 대신 `~/.bash_aliases`에 alias를 두
    ```bash
    alias linm='. $HOME/.local/bin/linm.sh'
    ```
-   점(`.`)과 공백이 반드시 있어야 현재 셸 세션에 디렉토리 변경이 반영됩니다.
+   > ⚠️ 점(`.`)과 공백이 반드시 있어야 현재 셸 세션에 디렉토리 변경이 반영됩니다.
 3. 적용:
    ```bash
    source ~/.bash_aliases
@@ -115,3 +130,48 @@ linm
 ```
 
 실행 후 다른 디렉토리로 이동해서 종료했을 때, 터미널 현재 경로가 마지막 작업 위치로 유지되면 정상입니다.
+
+---
+
+## 6) 버전 업그레이드
+
+새 버전 빌드·설치 후 처음 실행하면 자동으로 설정을 업그레이드합니다:
+
+- 기존 설정을 `~/.config/linm/back/`에 백업
+- 새로운 설정 키만 병합 (기존 커스터마이징 유지)
+- 설정 반영을 위해 자동 재시작
+
+별도로 설정을 초기화하거나 파일을 복사할 필요가 없습니다.
+
+---
+
+## 주요 단축키 (v0.9.3 기준)
+
+| 키 | 기능 |
+|----|------|
+| `Alt+F` | 파일명 필터 (실시간, 디렉토리 제외, 이동 시 유지) |
+| `Alt+S` | 정렬 방식 팝업 선택 (None/Name/Ext/Size/Time/Color) |
+| `Alt+X` / `Ctrl+Q` / `Ctrl+D` | 종료 |
+| `F8` / `Alt+D` | 삭제 |
+| `F1` | 도움말 |
+| `Ctrl+B` | 설정 변경 |
+| `Ctrl+O` | 서브쉘 |
+| `Ctrl+F` | 파일 찾기 |
+
+전체 단축키는 `F1` 도움말 또는 `~/.config/linm/keyset.cfg`를 참고하세요.
+
+---
+
+## 마우스 비활성화 옵션
+
+```bash
+# 실행 시 옵션
+linm --nomouse
+linm -M
+
+# 환경변수
+LINM_NO_MOUSE=1 linm
+
+# ~/.config/linm/default.cfg 설정
+Mouse = Off
+```
