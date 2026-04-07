@@ -3,6 +3,7 @@ layout: default
 title: "LinM 한글 설치 가이드"
 description: "LinM(Linux용 텍스트 UI 파일 관리자, Mdir 클론)을 sudo 없이 사용자 홈 경로($HOME/.local)에 안전하게 설치하는 방법을 안내합니다."
 lang: ko
+permalink: /
 ---
 
 # LinM 한글 설치 가이드
