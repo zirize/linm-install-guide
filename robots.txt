@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://zirize.github.io/linm-install-guide/sitemap.xml
