@@ -8,6 +8,8 @@ permalink: /
 
 # LinM 한글 설치 가이드
 
+📄 다른 프로젝트 문서: **[zirize.github.io](https://zirize.github.io/)**
+
 LinM은 Linux용 텍스트 UI 파일 관리자(Mdir 클론)입니다. 이 문서는 사용자 홈 경로(`$HOME/.local`)에 안전하게 설치하는 방법을 안내합니다.
 
 - 오리지널 프로젝트: https://github.com/la9527/linm
